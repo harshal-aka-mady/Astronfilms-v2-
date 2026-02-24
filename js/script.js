@@ -107,17 +107,62 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 2. Air-Gap Image Loader (Dynamic asset injection)
-    // This removes paths from the static HTML to fool "Save Page As"
+    // 2. Canvas-Based Air-Gap Image Loader (Ghost Rendering)
+    // Draws pixels directly to canvas, hiding links from browser scanners
     function loadProtectedAssets() {
         const protectedItems = document.querySelectorAll('[data-src-protected]');
+
         protectedItems.forEach(item => {
             const obfuscatedPath = item.getAttribute('data-src-protected');
-            // Decode simple reverse obfuscation
             const realPath = obfuscatedPath.split('').reverse().join('');
 
-            // Inject as background image for all protected containers
-            item.style.backgroundImage = `url('${realPath}')`;
+            // Create a ghost image object
+            const img = new Image();
+            img.src = realPath;
+
+            img.onload = () => {
+                // Create canvas
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+
+                // Add canvas to container
+                item.innerHTML = ''; // Clear fallback pixels
+                item.appendChild(canvas);
+
+                // Function to draw image with "cover" logic
+                const drawCanvas = () => {
+                    const w = item.offsetWidth;
+                    const h = item.offsetHeight;
+                    if (w === 0 || h === 0) return; // Prevent 0 size errors
+
+                    canvas.width = w;
+                    canvas.height = h;
+
+                    const imgRatio = img.width / img.height;
+                    const containerRatio = w / h;
+
+                    let drawWidth, drawHeight, offsetX, offsetY;
+
+                    if (containerRatio > imgRatio) {
+                        drawWidth = w;
+                        drawHeight = w / imgRatio;
+                        offsetX = 0;
+                        offsetY = (h - drawHeight) / 2;
+                    } else {
+                        drawWidth = h * imgRatio;
+                        drawHeight = h;
+                        offsetX = (w - drawWidth) / 2;
+                        offsetY = 0;
+                    }
+
+                    ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
+                };
+
+                drawCanvas();
+
+                // Handle resize
+                window.addEventListener('resize', drawCanvas);
+            };
         });
     }
 
