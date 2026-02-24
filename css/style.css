@@ -928,117 +928,37 @@ h4 {
     color: var(--text-muted);
 }
 
-/* --- Lightbox --- */
-.lightbox {
-    position: fixed;
-    inset: 0;
-    z-index: 9000;
-    background: rgba(0, 0, 0, 0.95);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    visibility: hidden;
-    transition: var(--transition);
-}
-
-.lightbox.active {
-    opacity: 1;
-    visibility: visible;
-}
-
-.lightbox-content {
+/* --- Services Support --- */
+.service-img {
     position: relative;
-    max-width: 90%;
-    max-height: 80vh;
+    width: 100%;
+    aspect-ratio: 16/9;
+    background-size: cover;
+    background-position: center;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.service-img img {
     width: 100%;
     height: 100%;
-    background-size: contain;
-    background-position: center;
-    background-repeat: no-repeat;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.lightbox-img {
-    max-width: 100%;
-    max-height: 80vh;
-    width: auto;
-    height: auto;
     opacity: 0;
-    /* Hide protection pixel */
-    display: block;
-    z-index: 2;
-    cursor: default;
+    pointer-events: none;
+    -webkit-user-drag: none;
 }
 
-/* Lightbox Watermark */
-.lightbox-content::after {
-    content: '© ASTRON FILMS - PREVIEW ONLY';
+.service-img::after {
+    content: '© ASTRON FILMS';
     position: absolute;
-    bottom: -40px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--text-muted);
-    letter-spacing: 2px;
-    white-space: nowrap;
-}
-
-.lightbox-close {
-    position: absolute;
-    top: 24px;
-    right: 24px;
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background: var(--glass-bg);
-    border: 1px solid var(--glass-border);
-    color: var(--text-primary);
-    font-size: 1.4rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: var(--transition-fast);
-}
-
-.lightbox-close:hover {
-    background: var(--accent);
-    color: #0a0a0a;
-}
-
-.lightbox-nav {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    background: var(--glass-bg);
-    border: 1px solid var(--glass-border);
-    color: var(--text-primary);
-    font-size: 1.2rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: var(--transition-fast);
-}
-
-.lightbox-nav:hover {
-    background: var(--accent);
-    color: #0a0a0a;
-}
-
-.lightbox-prev {
-    left: 24px;
-}
-
-.lightbox-next {
-    right: 24px;
+    bottom: 12px;
+    right: 12px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.4);
+    letter-spacing: 1px;
+    pointer-events: none;
+    z-index: 5;
 }
 
 /* --- Reveal Animation --- */
