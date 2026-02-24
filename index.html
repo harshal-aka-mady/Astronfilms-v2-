@@ -13,721 +13,24 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap"
         rel="stylesheet">
-    <style>
-        /* ============================================
-           ASTRON FILMS — Design System (Monolithic)
-           ============================================ */
-
-        :root {
-            --bg-primary: #0a0a0a;
-            --bg-secondary: #111111;
-            --bg-card: #161616;
-            --bg-card-hover: #1c1c1c;
-            --text-primary: #ffffff;
-            --text-secondary: #999999;
-            --text-muted: #555555;
-            --accent: #e6fc4f;
-            --accent-dark: #c8dc30;
-            --accent-glow: rgba(230, 252, 79, 0.15);
-            --glass-bg: rgba(255, 255, 255, 0.04);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --radius-sm: 8px;
-            --radius-md: 12px;
-            --radius-lg: 20px;
-            --radius-xl: 28px;
-            --transition: 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            --transition-fast: 0.25s ease;
-        }
-
-        *,
-        *::before,
-        *::after {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-            font-size: 16px;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        body {
-            font-family: 'Inter', system-ui, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.6;
-            overflow-x: hidden;
-            user-select: none;
-            /* Globally disable selection */
-        }
-
-        img {
-            max-width: 100%;
-            height: auto;
-            display: block;
-            user-select: none;
-            pointer-events: none;
-            -webkit-user-drag: none;
-        }
-
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        button {
-            border: none;
-            background: none;
-            cursor: pointer;
-            font-family: inherit;
-        }
-
-        .container {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 24px;
-        }
-
-        .section {
-            padding: 120px 0;
-        }
-
-        .accent-text {
-            color: var(--accent);
-        }
-
-        h1,
-        h2,
-        h3,
-        h4 {
-            font-family: 'Outfit', sans-serif;
-            font-weight: 700;
-            line-height: 1.1;
-        }
-
-        /* Preloader */
-        #preloader {
-            position: fixed;
-            inset: 0;
-            z-index: 9999;
-            background: var(--bg-primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: opacity 0.6s ease, visibility 0.6s ease;
-        }
-
-        #preloader.hidden {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-        }
-
-        .loader {
-            text-align: center;
-        }
-
-        .loader-text {
-            font-family: 'Outfit', sans-serif;
-            font-size: 2.5rem;
-            font-weight: 800;
-            letter-spacing: 12px;
-            color: var(--text-primary);
-        }
-
-        .loader-bar {
-            width: 120px;
-            height: 3px;
-            margin: 20px auto 0;
-            background: var(--glass-border);
-            border-radius: 2px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .loader-bar::after {
-            content: '';
-            position: absolute;
-            left: -40px;
-            top: 0;
-            width: 40px;
-            height: 100%;
-            background: var(--accent);
-            animation: loaderSlide 0.8s ease-in-out infinite;
-        }
-
-        @keyframes loaderSlide {
-            to {
-                left: 120px;
-            }
-        }
-
-        /* Navigation */
-        .navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            padding: 20px 0;
-            transition: var(--transition);
-        }
-
-        .navbar.scrolled {
-            background: rgba(10, 10, 10, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            padding: 12px 0;
-            border-bottom: 1px solid var(--glass-border);
-        }
-
-        .nav-container {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 24px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .nav-logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .logo-img {
-            width: 36px;
-            height: 36px;
-            border-radius: 8px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .logo-text {
-            font-family: 'Outfit', sans-serif;
-            font-size: 1.3rem;
-            font-weight: 800;
-            letter-spacing: 3px;
-        }
-
-        .logo-text .accent {
-            color: var(--accent);
-            font-weight: 400;
-        }
-
-        .nav-menu {
-            display: flex;
-            align-items: center;
-            gap: 32px;
-        }
-
-        .nav-link {
-            font-size: 0.9rem;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-            color: var(--text-secondary);
-            transition: var(--transition-fast);
-            position: relative;
-        }
-
-        .nav-link:hover {
-            color: var(--text-primary);
-        }
-
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: -4px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--accent);
-            transition: var(--transition-fast);
-        }
-
-        .nav-link:hover::after {
-            width: 100%;
-        }
-
-        .nav-cta {
-            background: var(--accent);
-            color: #0a0a0a !important;
-            padding: 10px 24px;
-            border-radius: 100px;
-            font-weight: 600;
-        }
-
-        .nav-cta:hover {
-            background: var(--accent-dark);
-            transform: scale(1.05);
-        }
-
-        .hamburger {
-            display: none;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .hamburger span {
-            width: 24px;
-            height: 2px;
-            background: var(--text-primary);
-            transition: var(--transition-fast);
-        }
-
-        /* Hero */
-        .hero {
-            position: relative;
-            height: 100vh;
-            min-height: 600px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-
-        .hero-video {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            z-index: 0;
-        }
-
-        .hero-overlay {
-            position: absolute;
-            inset: 0;
-            z-index: 1;
-            background: linear-gradient(180deg, rgba(10, 10, 10, 0.5) 0%, rgba(10, 10, 10, 0.95) 100%);
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 2;
-            text-align: center;
-            max-width: 850px;
-            padding: 0 24px;
-        }
-
-        .hero-badge {
-            display: inline-block;
-            font-size: 0.75rem;
-            font-weight: 600;
-            letter-spacing: 4px;
-            color: var(--accent);
-            border: 1px solid var(--accent);
-            padding: 8px 20px;
-            border-radius: 100px;
-            margin-bottom: 28px;
-        }
-
-        .hero-title {
-            font-size: clamp(2.8rem, 7vw, 5.5rem);
-            font-weight: 900;
-            margin-bottom: 24px;
-        }
-
-        .hero-subtitle {
-            font-size: clamp(1rem, 2vw, 1.2rem);
-            color: var(--text-secondary);
-            max-width: 600px;
-            margin: 0 auto 40px;
-        }
-
-        .hero-actions {
-            display: flex;
-            gap: 16px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 14px 32px;
-            border-radius: 100px;
-            font-size: 0.95rem;
-            font-weight: 600;
-            transition: var(--transition);
-        }
-
-        .btn-primary {
-            background: var(--accent);
-            color: #0a0a0a;
-        }
-
-        .btn-primary:hover {
-            background: var(--accent-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px var(--accent-glow);
-        }
-
-        .btn-outline {
-            border: 1px solid var(--glass-border);
-            color: var(--text-primary);
-            background: var(--glass-bg);
-        }
-
-        .btn-outline:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-        }
-
-        /* Services */
-        .services {
-            background: var(--bg-secondary);
-        }
-
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 24px;
-        }
-
-        .service-card {
-            position: relative;
-            border-radius: var(--radius-lg);
-            overflow: hidden;
-            background: var(--bg-card);
-            border: 1px solid var(--glass-border);
-            transition: var(--transition);
-        }
-
-        .service-img {
-            height: 240px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .service-content {
-            padding: 28px 28px 32px;
-        }
-
-        .service-number {
-            font-family: 'Outfit', sans-serif;
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: var(--accent);
-            letter-spacing: 2px;
-        }
-
-        .service-content h3 {
-            font-size: 1.4rem;
-            margin: 8px 0 12px;
-        }
-
-        .service-content p {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-        }
-
-        /* Portfolio */
-        .case-study {
-            margin-bottom: 80px;
-        }
-
-        .case-tag {
-            font-size: 0.75rem;
-            font-weight: 600;
-            letter-spacing: 4px;
-            color: var(--accent);
-            display: block;
-            margin-bottom: 12px;
-        }
-
-        .case-title {
-            font-size: clamp(1.6rem, 3.5vw, 2.4rem);
-            margin-bottom: 16px;
-        }
-
-        .case-desc {
-            color: var(--text-secondary);
-            max-width: 650px;
-            margin-bottom: 40px;
-        }
-
-        .case-divider {
-            height: 1px;
-            background: var(--glass-border);
-            margin: 80px 0;
-        }
-
-        .gallery-grid {
-            display: grid;
-            gap: 12px;
-            grid-template-columns: repeat(3, 1fr);
-            grid-auto-rows: 280px;
-        }
-
-        .gallery-item {
-            border-radius: var(--radius-md);
-            overflow: hidden;
-            position: relative;
-            background-color: var(--bg-card);
-            transition: var(--transition);
-        }
-
-        .gallery-grid .gallery-item:first-child {
-            grid-column: span 2;
-        }
-
-        /* Protection UI (Canvas Air-Gap) */
-        .gallery-item canvas,
-        .service-img canvas,
-        .logo-img canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            display: block;
-            animation: ghostFade 0.6s ease-out forwards;
-        }
-
-        @keyframes ghostFade {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
-        }
-
-        /* Showreel */
-        .showreel {
-            background: var(--bg-secondary);
-        }
-
-        .showreel-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-        }
-
-        .showreel-item {
-            position: relative;
-            border-radius: var(--radius-lg);
-            overflow: hidden;
-            aspect-ratio: 16/9;
-            cursor: pointer;
-            background: var(--bg-card);
-        }
-
-        .showreel-item video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .showreel-overlay {
-            position: absolute;
-            inset: 0;
-            background: rgba(10, 10, 10, 0.5);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            transition: var(--transition);
-        }
-
-        .play-btn {
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            border: 2px solid var(--text-primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            transition: var(--transition);
-        }
-
-        .showreel-item:hover .play-btn {
-            border-color: var(--accent);
-            color: var(--accent);
-            transform: scale(1.1);
-        }
-
-        /* About */
-        .about-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 80px;
-            align-items: center;
-        }
-
-        .stat-card {
-            background: var(--bg-card);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-lg);
-            padding: 32px;
-            text-align: center;
-            transition: var(--transition);
-        }
-
-        .stat-number {
-            font-family: 'Outfit', sans-serif;
-            font-size: 2.8rem;
-            font-weight: 800;
-            color: var(--accent);
-            display: block;
-        }
-
-        /* Contact */
-        .contact-wrapper {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 80px;
-        }
-
-        .contact-detail {
-            display: flex;
-            align-items: flex-start;
-            gap: 16px;
-            margin-bottom: 20px;
-        }
-
-        .contact-icon {
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .contact-form {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
-            width: 100%;
-            background: var(--bg-secondary);
-            border: 1px solid var(--glass-border);
-            padding: 16px;
-            color: white;
-            border-radius: 8px;
-            font-family: inherit;
-        }
-
-        /* Footer */
-        .footer {
-            padding: 80px 0 40px;
-            border-top: 1px solid var(--glass-border);
-        }
-
-        .footer-content {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr;
-            gap: 60px;
-            margin-bottom: 60px;
-        }
-
-        .footer-links h4 {
-            margin-bottom: 24px;
-            color: var(--text-primary);
-        }
-
-        .footer-links a {
-            display: block;
-            margin-bottom: 12px;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            transition: var(--transition-fast);
-        }
-
-        .footer-links a:hover {
-            color: var(--accent);
-        }
-
-        .footer-bottom {
-            text-align: center;
-            padding-top: 40px;
-            border-top: 1px solid var(--glass-border);
-            color: var(--text-muted);
-            font-size: 0.85rem;
-        }
-
-        /* Reveal */
-        .reveal {
-            opacity: 0;
-            transform: translateY(40px);
-            transition: opacity 0.8s ease, transform 0.8s ease;
-        }
-
-        .reveal.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        @media (max-width: 992px) {
-
-            .about-content,
-            .contact-wrapper {
-                grid-template-columns: 1fr;
-                gap: 40px;
-            }
-
-            .footer-content {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        @media (max-width: 768px) {
-
-            .services-grid,
-            .gallery-grid,
-            .showreel-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .hamburger {
-                display: flex;
-            }
-
-            .nav-menu {
-                display: none;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
 
+    <!-- Preloader -->
     <div id="preloader">
-        <div class="loader"><span class="loader-text">ASTRON</span>
+        <div class="loader">
+            <span class="loader-text">ASTRON</span>
             <div class="loader-bar"></div>
         </div>
     </div>
 
+    <!-- Navigation -->
     <nav id="navbar" class="navbar">
         <div class="nav-container">
             <a href="#hero" class="nav-logo">
-                <div class="logo-img" data-src-protected="gepj.5110071627671/segami/stessa">
-                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="
-                        alt="Astron Films">
-                </div>
+                <img src="assets/images/1767261700115.jpeg" alt="Astron Films" class="logo-img">
                 <span class="logo-text">ASTRON<span class="accent">FILMS</span></span>
             </a>
             <div class="nav-menu" id="navMenu">
@@ -737,11 +40,13 @@
                 <a href="#about" class="nav-link">About</a>
                 <a href="#contact" class="nav-link nav-cta">Get in Touch</a>
             </div>
-            <button class="hamburger" id="hamburger"
-                aria-label="Toggle menu"><span></span><span></span><span></span></button>
+            <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
         </div>
     </nav>
 
+    <!-- Hero Section -->
     <section id="hero" class="hero">
         <video class="hero-video" autoplay muted loop playsinline>
             <source src="assets/videos/WhatsApp%20Video%202026-02-05%20at%2014.40.34.mp4" type="video/mp4">
@@ -749,8 +54,11 @@
         <div class="hero-overlay"></div>
         <div class="hero-content">
             <div class="hero-badge reveal">AI-POWERED STUDIO</div>
-            <h1 class="hero-title reveal"><span class="line">We Create</span><span class="line accent-text">Cinematic
-                    Worlds</span><span class="line">With AI</span></h1>
+            <h1 class="hero-title reveal">
+                <span class="line">We Create</span>
+                <span class="line accent-text">Cinematic Worlds</span>
+                <span class="line">With AI</span>
+            </h1>
             <p class="hero-subtitle reveal">Award-winning AI film production. From pre-visualization to final cut, we
                 push the boundaries of generative cinema.</p>
             <div class="hero-actions reveal">
@@ -758,8 +66,13 @@
                 <a href="#contact" class="btn btn-outline">Start a Project</a>
             </div>
         </div>
+        <div class="hero-scroll">
+            <span>Scroll</span>
+            <div class="scroll-indicator"></div>
+        </div>
     </section>
 
+    <!-- Services Section -->
     <section id="services" class="section services">
         <div class="container">
             <div class="section-header reveal">
@@ -768,46 +81,59 @@
                 <p class="section-desc">Pioneering the future of filmmaking with AI-powered production capabilities.</p>
             </div>
             <div class="services-grid">
-                <div class="service-card reveal">
-                    <div class="service-img"
-                        data-src-protected="gnp.1_3c1c3e16674-93f9-2b44-f1f5-6f701865_fo_tohs_gnihsilbatse_elgna_pot_ediw_citameniC_rajjag_ilahsiav/secivres/segami/stessa">
+                <div class="service-card reveal" style="--delay: 0.1s">
+                    <div class="service-img">
+                        <img src="assets/images/services/vaishali_gajjar_Cinematic_wide_top_angle_establishing_shot_of_568107f6-5f1f-44b2-9f39-47661ce3c1c3_1.png"
+                            alt="AI Ad Films" loading="lazy">
                     </div>
-                    <div class="service-content"><span class="service-number">01</span>
+                    <div class="service-content">
+                        <span class="service-number">01</span>
                         <h3>AI Ad Films</h3>
-                        <p>Cinematic advertisements powered by AI. 10x faster than traditional production.</p>
+                        <p>Cinematic advertisements powered by AI. From concept to final cut, delivered 10x faster than
+                            traditional production.</p>
                     </div>
                 </div>
-                <div class="service-card reveal">
-                    <div class="service-img"
-                        data-src-protected="gnp.3_3d3cd28b0b3d-10ba-f594-1106-b4125b0e_errac_vedusaV_fo_feiler_latem_eznorb_citameniC_rajjag_ilahsiav/secivres/segami/stessa">
+                <div class="service-card reveal" style="--delay: 0.2s">
+                    <div class="service-img">
+                        <img src="assets/images/services/vaishali_gajjar_Cinematic_bronze_metal_relief_of_Vasudev_carr_e0b5214b-6011-495f-ab01-9d3b0b82d3d3_3.png"
+                            alt="AI Short Films" loading="lazy">
                     </div>
-                    <div class="service-content"><span class="service-number">02</span>
+                    <div class="service-content">
+                        <span class="service-number">02</span>
                         <h3>AI Short Films</h3>
-                        <p>Story-driven short films with AI-generated visuals. No production limits.</p>
+                        <p>Story-driven short films with AI-generated visuals. Push creative boundaries without
+                            production limits.</p>
                     </div>
                 </div>
-                <div class="service-card reveal">
-                    <div class="service-img"
-                        data-src-protected="gnp.83930a05efade-e518-b604-97e8-543dae8-543d56b33_nigrahc_tnahpele_raw_tnaig_a_fo_tohs_citameniC_ediw_A_8842yhsiv/secivres/segami/stessa">
+                <div class="service-card reveal" style="--delay: 0.3s">
+                    <div class="service-img">
+                        <img src="assets/images/services/vishy2488_A_wide_cinematic_shot_of_a_giant_war_elephant_chargin_33b65d45-8e79-406b-815e-edafe50ac938.png"
+                            alt="Pre-Visualization" loading="lazy">
                     </div>
-                    <div class="service-content"><span class="service-number">03</span>
+                    <div class="service-content">
+                        <span class="service-number">03</span>
                         <h3>Pre-Visualization</h3>
-                        <p>See your film before it exists. AI-powered planning for every frame.</p>
+                        <p>See your film before it exists. AI-powered previsualization for planning, pitching, and
+                            perfecting every frame.</p>
                     </div>
                 </div>
-                <div class="service-card reveal">
-                    <div class="service-img"
-                        data-src-protected="gnp.f14d91acebe-736b-cc29-4c29-b119-10bb7b22_wayajiV_3891_ni_esuoh_sreywal_a_fo_tohs_pot_citameniC_8842yhsiv/secivres/segami/stessa">
+                <div class="service-card reveal" style="--delay: 0.4s">
+                    <div class="service-img">
+                        <img src="assets/images/services/vishy2488_Cinematic_top_shot_of_a_lawyers_house_in_1983_Vijayaw_22b7bb01-911b-492c-b637-ebeca19d841f.png"
+                            alt="Character Design" loading="lazy">
                     </div>
-                    <div class="service-content"><span class="service-number">04</span>
+                    <div class="service-content">
+                        <span class="service-number">04</span>
                         <h3>Character Design</h3>
-                        <p>Hyper-realistic, consistent characters generated by AI for feature films.</p>
+                        <p>Hyper-realistic, consistent characters generated by AI. Perfect for episodic content and
+                            feature films.</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- Portfolio Section -->
     <section id="portfolio" class="section portfolio">
         <div class="container">
             <div class="section-header reveal">
@@ -816,191 +142,269 @@
                 <p class="section-desc">Explore our latest projects showcasing the power of AI in cinema.</p>
             </div>
 
+            <!-- Case Study 1: Pre Viz -->
             <div class="case-study reveal">
                 <div class="case-study-header">
                     <span class="case-tag">CASE STUDY 01</span>
                     <h3 class="case-title">Pre Viz for Clients<br><span class="accent-text">Short Films</span></h3>
                     <p class="case-desc">AI-powered pre-visualization brings cinematic visions to life before production
-                        begins.</p>
+                        begins. We transform storyboards and concepts into photorealistic sequences, helping clients see
+                        their films before a single frame is shot.</p>
                 </div>
-                <div class="gallery-grid">
-                    <div class="gallery-item"
-                        data-src-protected="gnp.9b9941e00bdb-eba-0ed4-032f-6991de1e1_555231_32106202_fh/1-yduts-esac/oilof-trop/segami/stessa">
-                    </div>
-                    <div class="gallery-item"
-                        data-src-protected="gnp.4940c8ef7907-278a-dc34-e022-0e77adce_850431_42106202_fh/1-yduts-esac/oilof-trop/segami/stessa">
-                    </div>
-                    <div class="gallery-item"
-                        data-src-protected="gnp.2de2bd2fcead-45eb-5754-8123-24c15410/1-yduts-esac/oilof-trop/segami/stessa">
-                    </div>
-                    <div class="gallery-item"
-                        data-src-protected="gnp.9f40324a29fa-6cf8-8194-22c6-45474088/1-yduts-esac/oilof-trop/segami/stessa">
-                    </div>
-                    <div class="gallery-item"
-                        data-src-protected="gnp.937c4408ffb6-139a-5ada-aee8-4f686451/1-yduts-esac/oilof-trop/segami/stessa">
+                <div class="case-gallery">
+                    <div class="gallery-grid">
+                        <div class="gallery-item"><img
+                                src="assets/images/portfolio/case-study-1/hf_20260123_132555_1ee1ed96-f230-4de0-adbe-bdd00e1499b9.png"
+                                alt="Pre-viz frame 1" loading="lazy"></div>
+                        <div class="gallery-item"><img
+                                src="assets/images/portfolio/case-study-1/hf_20260124_134058_ecda77e0-220e-43cd-a872-7097fe8c0494.png"
+                                alt="Pre-viz frame 2" loading="lazy"></div>
+                        <div class="gallery-item"><img
+                                src="assets/images/portfolio/case-study-1/01451c42-3218-4575-be54-daecf2db2ed2.png"
+                                alt="Pre-viz frame 3" loading="lazy"></div>
+                        <div class="gallery-item"><img
+                                src="assets/images/portfolio/case-study-1/88047454-6c22-4918-8fc6-af92a42304f9.png"
+                                alt="Pre-viz frame 4" loading="lazy"></div>
+                        <div class="gallery-item"><img
+                                src="assets/images/portfolio/case-study-1/154686f4-8eea-4da5-a931-6bff8044c735%20(1).png"
+                                alt="Pre-viz frame 5" loading="lazy"></div>
+                        <div class="gallery-item"><img
+                                src="assets/images/portfolio/case-study-1/371edd0c-bab0-4a0f-84a0-2840d42190c6%20(1).png"
+                                alt="Pre-viz frame 6" loading="lazy"></div>
                     </div>
                 </div>
             </div>
-
             <div class="case-divider"></div>
 
+            <!-- Case Study 2: Character Consistency -->
             <div class="case-study reveal">
                 <div class="case-study-header">
                     <span class="case-tag">CASE STUDY 02</span>
                     <h3 class="case-title">Hyper Realistic<br><span class="accent-text">Character Consistency</span>
                     </h3>
                     <p class="case-desc">Our proprietary AI pipeline ensures character consistency across every frame.
-                    </p>
+                        From historical figures to original characters, we deliver photorealistic results that maintain
+                        identity, expression, and style throughout.</p>
                 </div>
-                <div class="gallery-grid">
-                    <div class="gallery-item" data-src-protected="gpj.2/2-yduts-esac/oilof-trop/segami/stessa"></div>
-                    <div class="gallery-item"
-                        data-src-protected="gpj.dim_ammasaluT/2-yduts-esac/oilof-trop/segami/stessa"></div>
-                    <div class="gallery-item"
-                        data-src-protected="gpj.wol namow dlO/2-yduts-esac/oilof-trop/segami/stessa"></div>
-                    <div class="gallery-item"
-                        data-src-protected="gnp.8a69a439193-675b-6794-38b8-09be6060__dazA_rahkehS_ardnahC_fo_otohp_noitca-dim_citamenic_A_8842yhsiv/2-yduts-esac/oilof-trop/segami/stessa">
-                    </div>
-                    <div class="gallery-item"
-                        data-src-protected="gnp.3189ea0e4658-4bd4-df6e-df6e-55fdb0cc_oloc_7581_ni_dnuorg_edarap_ytsud_a_fo_tohs_elgna-ediW_8842yhsiv/2-yduts-esac/oilof-trop/segami/stessa">
+                <div class="case-gallery">
+                    <div class="gallery-grid">
+                        <div class="gallery-item"><img src="assets/images/portfolio/case-study-2/2.jpg"
+                                alt="Character 1" loading="lazy"></div>
+                        <div class="gallery-item"><img src="assets/images/portfolio/case-study-2/Tulasamma_mid.jpg"
+                                alt="Character 2" loading="lazy"></div>
+                        <div class="gallery-item"><img src="assets/images/portfolio/case-study-2/Old%20woman%20low.jpg"
+                                alt="Character 3" loading="lazy"></div>
+                        <div class="gallery-item"><img
+                                src="assets/images/portfolio/case-study-2/vishy2488_A_cinematic_mid-action_photo_of_Chandra_Shekhar_Azad__0606eb90-8b83-4795-b576-391934ea96a8.png"
+                                alt="Character 4" loading="lazy"></div>
+                        <div class="gallery-item"><img
+                                src="assets/images/portfolio/case-study-2/vishy2488_Wide-angle_shot_of_a_dusty_parade_ground_in_1857_colo_cc0bdf55-e6fd-4db8-8564-0e20eade9813.png"
+                                alt="Character 5" loading="lazy"></div>
+                        <div class="gallery-item"><img
+                                src="assets/images/portfolio/case-study-2/vishy2488_Wide_rural_shot_Patel_addressing_large_crowd_of_farme_44628185-2362-4b0d-b24f-1ced93aaff85.png"
+                                alt="Character 6" loading="lazy"></div>
                     </div>
                 </div>
             </div>
-
             <div class="case-divider"></div>
 
+            <!-- Case Study 3: Landscape & Drone -->
             <div class="case-study reveal">
                 <div class="case-study-header">
                     <span class="case-tag">CASE STUDY 03</span>
                     <h3 class="case-title">Landscape &<br><span class="accent-text">Drone View</span></h3>
-                    <p class="case-desc">Aerial perspectives and environmental design powered by AI.</p>
+                    <p class="case-desc">Stunning aerial perspectives and environmental design powered by AI. We create
+                        breathtaking drone-view landscapes and architectural visualizations that redefine what's
+                        possible.</p>
                 </div>
-                <div class="gallery-grid">
-                    <div class="gallery-item"
-                        data-src-protected="gnp.2_12f6270845ae-f3da-8684-8015-5b5612e9__adawayajiV_3891_fo_tohs_enord_ediw_citameniC_rajjag_ilahsiav/3-yduts-esac/oilof-trop/segami/stessa">
-                    </div>
-                    <div class="gallery-item"
-                        data-src-protected="gnp.1_3be5ae6c698c-799b-f084-3d88-a9b019a2_fo_tohs_gnihsilbatse_ediw_elgna_pot_citameniC_rajjag_ilahsiav/3-yduts-esac/oilof-trop/segami/stessa">
-                    </div>
-                    <div class="gallery-item"
-                        data-src-protected="gpj.0917e07b40a1-f65f-5fa4-7ba4-43b3c73d_relacspUlasrevinU/3-yduts-esac/oilof-trop/segami/stessa">
-                    </div>
-                    <div class="gallery-item"
-                        data-src-protected="gnp.2_0355a8de79d6-2318-f364-3e71-8a668c6c_o_enecs_ygrene_enivid_IGC_doowylloH_citameniC_rajjag_ilahsiav/3-yduts-esac/oilof-trop/segami/stessa">
-                    </div>
-                    <div class="gallery-item"
-                        data-src-protected="gnp.3_cd337a88b26-be19-4644-53c2-429077cb__adawayajiV_3891_fo_tohs_enord_ediw_citameniC_rajjag_ilahsiav/3-yduts-esac/oilof-trop/segami/stessa">
+                <div class="case-gallery">
+                    <div class="gallery-grid">
+                        <div class="gallery-item"><img
+                                src="assets/images/portfolio/case-study-3/vaishali_gajjar_Cinematic_wide_drone_shot_of_1983_Vijayawada__9e2165b5-5108-4868-ad3f-ea5480726f21_2.png"
+                                alt="Drone view 1" loading="lazy"></div>
+                        <div class="gallery-item"><img
+                                src="assets/images/portfolio/case-study-3/vaishali_gajjar_Cinematic_top_angle_wide_establishing_shot_of_2a910b9a-88d3-480f-b997-c896ceae5eb3_1.png"
+                                alt="Drone view 2" loading="lazy"></div>
+                        <div class="gallery-item"><img
+                                src="assets/images/portfolio/case-study-3/UniversalUpscaler_d37c3b34-d4b7-4af5-a56f-1a04b70e7190.jpg"
+                                alt="Landscape 1" loading="lazy"></div>
+                        <div class="gallery-item"><img
+                                src="assets/images/portfolio/case-study-3/vaishali_gajjar_Cinematic_Hollywood_CGI_divine_energy_scene_o_c6c866a8-17e3-463f-8132-6d97ed8a5530_2.png"
+                                alt="Landscape 2" loading="lazy"></div>
+                        <div class="gallery-item"><img
+                                src="assets/images/portfolio/case-study-3/vaishali_gajjar_Cinematic_wide_drone_shot_of_1983_Vijayawada__bc770924-2c35-4464-91eb-62b88da733dc_3.png"
+                                alt="Drone view 3" loading="lazy"></div>
+                        <div class="gallery-item"><img
+                                src="assets/images/portfolio/case-study-3/vishy2488_Cinematic_wide_shot_of_a_lawyers_house_in_1983_Vijaya_e8a125cf-4022-4052-aa97-fdd24a166c10.png"
+                                alt="Landscape 3" loading="lazy"></div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- Showreel Section -->
     <section id="showreel" class="section showreel">
         <div class="container">
-            <div class="section-header reveal"><span class="section-tag">IN MOTION</span>
+            <div class="section-header reveal">
+                <span class="section-tag">IN MOTION</span>
                 <h2 class="section-title">Video <span class="accent-text">Showreel</span></h2>
+                <p class="section-desc">See our AI-generated content come to life.</p>
             </div>
             <div class="showreel-grid">
-                <div class="showreel-item reveal"><video muted loop playsinline>
+                <div class="showreel-item reveal" style="--delay: 0.1s">
+                    <video muted loop playsinline preload="metadata">
                         <source src="assets/videos/portfolio/Gandhiji.mp4" type="video/mp4">
                     </video>
                     <div class="showreel-overlay">
-                        <div class="play-btn">▶</div><span>Historical Drama</span>
+                        <div class="play-btn">▶</div>
+                        <span>Historical Drama Pre-Viz</span>
                     </div>
                 </div>
-                <div class="showreel-item reveal"><video muted loop playsinline>
+                <div class="showreel-item reveal" style="--delay: 0.2s">
+                    <video muted loop playsinline preload="metadata">
                         <source
                             src="assets/videos/portfolio/aghori_sadhus_walking__wind_blowing_the_camera_follows_the_subject_moving1742810969841.mp4"
                             type="video/mp4">
                     </video>
                     <div class="showreel-overlay">
-                        <div class="play-btn">▶</div><span>Character Study</span>
+                        <div class="play-btn">▶</div>
+                        <span>Atmospheric Character Study</span>
                     </div>
                 </div>
-                <div class="showreel-item reveal"><video muted loop playsinline>
+                <div class="showreel-item reveal" style="--delay: 0.3s">
+                    <video muted loop playsinline preload="metadata">
                         <source src="assets/videos/portfolio/kling_20251130_Text_to_Video_Top_down_d_742_0.mp4"
                             type="video/mp4">
                     </video>
                     <div class="showreel-overlay">
-                        <div class="play-btn">▶</div><span>Drone View</span>
+                        <div class="play-btn">▶</div>
+                        <span>Drone View Landscape</span>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- About Section -->
     <section id="about" class="section about">
         <div class="container">
+            <div class="section-header reveal">
+                <span class="section-tag">WHO WE ARE</span>
+                <h2 class="section-title">About <span class="accent-text">Astron Films</span></h2>
+            </div>
             <div class="about-content">
                 <div class="about-text reveal">
-                    <h3>Redefining Cinema with <span class="accent-text">AI</span></h3>
-                    <p>Astron Films is an AI-powered studio at the forefront of generative cinema. We blend tech with
-                        storytelling to create compelling narratives.</p>
+                    <h3>Redefining Cinema with <span class="accent-text">Artificial Intelligence</span></h3>
+                    <p>Astron Films is an AI-powered film production studio at the forefront of generative cinema. We
+                        blend cutting-edge AI technology with traditional storytelling to create compelling visual
+                        narratives that captivate audiences worldwide.</p>
+                    <p>From hyper-realistic character design to breathtaking aerial landscapes, our proprietary AI
+                        pipelines deliver production-quality content at unprecedented speed — empowering filmmakers,
+                        advertisers, and creators to bring their visions to life.</p>
                 </div>
-                <div class="about-stats reveal">
-                    <div class="stat-card"><span class="stat-number" data-target="50">0</span><span
-                            class="stat-label">Projects</span></div>
-                    <div class="stat-card"><span class="stat-number" data-target="30">0</span><span
-                            class="stat-label">Clients</span></div>
+                <div class="about-stats reveal" style="--delay: 0.2s">
+                    <div class="stat-card">
+                        <span class="stat-number" data-target="50">0</span>
+                        <span class="stat-label">Projects Delivered</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" data-target="30">0</span>
+                        <span class="stat-label">Happy Clients</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" data-target="3">0</span>
+                        <span class="stat-label">Years Experience</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" data-target="10">0</span>
+                        <span class="stat-label">AI Models Used</span>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- Contact Section -->
     <section id="contact" class="section contact">
         <div class="container">
-            <div class="section-header reveal"><span class="section-tag">GET IN TOUCH</span>
+            <div class="section-header reveal">
+                <span class="section-tag">GET IN TOUCH</span>
                 <h2 class="section-title">Let's Create <span class="accent-text">Together</span></h2>
+                <p class="section-desc">Have a project in mind? Let's discuss how AI can elevate your vision.</p>
             </div>
             <div class="contact-wrapper">
                 <div class="contact-info reveal">
                     <h3>Start Your <span class="accent-text">Journey</span></h3>
+                    <p>Whether you need a complete AI short film, pre-visualization for your production, or
+                        hyper-realistic character design — we're ready to bring your ideas to life.</p>
                     <div class="contact-detail">
-                        <div class="contact-icon">✉</div><span>business@astronfilms.com</span>
-                    </div>
-                    <div class="contact-detail">
-                        <div class="contact-icon">📞</div><span>+91 97637 93450</span>
+                        <div class="contact-icon">✉</div>
+                        <span>contact@astronfilms.com</span>
                     </div>
                     <div class="contact-detail">
                         <div class="contact-icon">📍</div>
-                        <span>1109, Lotus Link Square, New Link Rd, Manmandir Co.operative Housing Society, Shitladevi
-                            Chawl, D.N.Nagar, Andheri West, Mumbai, Maharashtra 400053</span>
+                        <span>India</span>
+                    </div>
+                    <div class="contact-detail">
+                        <div class="contact-icon">🌐</div>
+                        <span>astronfilms.com</span>
                     </div>
                 </div>
-                <form class="contact-form reveal" id="contactForm">
-                    <div class="form-group"><label>Your Name</label><input type="text" name="name"
-                            placeholder="John Doe" required></div>
-                    <div class="form-group"><label>Email Address</label><input type="email" name="email"
-                            placeholder="john@example.com" required></div>
-                    <div class="form-group"><label>Phone Number</label><input type="tel" name="phone"
-                            placeholder="+91 12345 67890" required></div>
-                    <div class="form-group"><label>Service</label><select name="service">
+                <form class="contact-form reveal" style="--delay: 0.2s" id="contactForm">
+                    <div class="form-group">
+                        <label for="name">Your Name</label>
+                        <input type="text" id="name" name="name" placeholder="John Doe" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" placeholder="john@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="service">Service Interested In</label>
+                        <select id="service" name="service">
+                            <option value="">Select a service</option>
                             <option value="ad-films">AI Ad Films</option>
                             <option value="short-films">AI Short Films</option>
                             <option value="pre-viz">Pre-Visualization</option>
+                            <option value="character">Character Design</option>
                             <option value="other">Other</option>
-                        </select></div>
-                    <div class="form-group"><label>Message</label><textarea name="message"
-                            placeholder="Tell us about your project..." required></textarea></div>
-                    <button type="submit" class="btn btn-primary">Send Message</button>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Your Message</label>
+                        <textarea id="message" name="message" placeholder="Tell us about your project..."
+                            required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">Send
+                        Message</button>
                 </form>
             </div>
         </div>
     </section>
 
+    <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
-                <div class="footer-brand"><span class="logo-text">ASTRON<span class="accent">FILMS</span></span>
-                    <p>AI-powered cinema production studio.</p>
+                <div class="footer-brand">
+                    <span class="logo-text">ASTRON<span class="accent">FILMS</span></span>
+                    <p>AI-powered cinema production studio. Redefining visual storytelling with generative AI.</p>
                 </div>
                 <div class="footer-links">
-                    <h4>Navigation</h4><a href="#services">Services</a><a href="#portfolio">Work</a><a
-                        href="#about">About</a>
+                    <h4>Navigation</h4>
+                    <a href="#services">Services</a>
+                    <a href="#portfolio">Work</a>
+                    <a href="#showreel">Showreel</a>
+                    <a href="#about">About</a>
+                    <a href="#contact">Contact</a>
                 </div>
                 <div class="footer-links">
-                    <h4>Legal</h4><a href="#">Privacy Policy</a><a href="#">Terms of Service</a>
+                    <h4>Services</h4>
+                    <a href="#services">AI Ad Films</a>
+                    <a href="#services">AI Short Films</a>
+                    <a href="#services">Pre-Visualization</a>
+                    <a href="#services">Character Design</a>
                 </div>
             </div>
             <div class="footer-bottom">
@@ -1009,139 +413,15 @@
         </div>
     </footer>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const preloader = document.getElementById('preloader');
-            window.addEventListener('load', () => setTimeout(() => preloader.classList.add('hidden'), 800));
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" id="lightboxClose">&times;</button>
+        <button class="lightbox-nav lightbox-prev" id="lightboxPrev">‹</button>
+        <button class="lightbox-nav lightbox-next" id="lightboxNext">›</button>
+        <img class="lightbox-img" id="lightboxImg" src="" alt="Fullscreen view">
+    </div>
 
-            const navbar = document.getElementById('navbar');
-            window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', window.scrollY > 60), { passive: true });
-
-            const hamburger = document.getElementById('hamburger');
-            const navMenu = document.getElementById('navMenu');
-            hamburger.addEventListener('click', () => { hamburger.classList.toggle('active'); navMenu.classList.toggle('active'); });
-
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const target = document.querySelector(anchor.getAttribute('href'));
-                    if (target) {
-                        const top = target.getBoundingClientRect().top + window.scrollY - 80;
-                        window.scrollTo({ top, behavior: 'smooth' });
-                    }
-                });
-            });
-
-            const revealObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
-            }, { threshold: 0.1 });
-            document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
-
-            /* Fortress Security Locks */
-            document.addEventListener('contextmenu', e => e.preventDefault());
-            document.addEventListener('keydown', e => {
-                if ((e.ctrlKey && (e.key === 's' || e.key === 'u' || e.key === 'p')) ||
-                    (e.ctrlKey && e.shiftKey && (e.key === 'i' || e.key === 'j' || e.key === 'c' || e.key === 'k')) ||
-                    (e.key === 'F12') || (e.key === 'F11')) {
-                    e.preventDefault(); return false;
-                }
-            });
-            window.addEventListener('keydown', e => { if (e.ctrlKey && e.shiftKey && e.key === 'I') e.preventDefault(); });
-
-            function loadProtectedAssets() {
-                const protectedItems = document.querySelectorAll('[data-src-protected]');
-                console.log('Found ' + protectedItems.length + ' protected assets.');
-
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting || entry.target.dataset.forceLoad === 'true') {
-                            const item = entry.target;
-                            if (item.getAttribute('data-loaded') === 'true') return;
-
-                            const obfuscated = item.getAttribute('data-src-protected');
-                            const path = obfuscated.split('').reverse().join('');
-                            console.log('Loading asset: ' + path);
-
-                            const img = new Image();
-                            img.src = encodeURI(path);
-                            img.onerror = () => console.error('Failed to load protected asset:', path);
-                            img.onload = () => {
-                                item.setAttribute('data-loaded', 'true');
-                                const canvas = document.createElement('canvas');
-                                const ctx = canvas.getContext('2d');
-                                item.innerHTML = '';
-                                item.appendChild(canvas);
-
-                                const draw = () => {
-                                    const w = item.offsetWidth;
-                                    const h = item.offsetHeight;
-                                    if (w === 0 || h === 0) {
-                                        setTimeout(draw, 100);
-                                        return;
-                                    }
-                                    canvas.width = w;
-                                    canvas.height = h;
-                                    const imgRatio = img.width / img.height;
-                                    const containerRatio = w / h;
-                                    let dw, dh, ox, oy;
-                                    if (containerRatio > imgRatio) {
-                                        dw = w; dh = w / imgRatio; ox = 0; oy = (h - dh) / 2;
-                                    } else {
-                                        dw = h * imgRatio; dh = h; ox = (w - dw) / 2; oy = 0;
-                                    }
-                                    ctx.drawImage(img, ox, oy, dw, dh);
-                                };
-                                draw();
-                                window.addEventListener('resize', draw);
-                                observer.unobserve(item);
-                            };
-                        }
-                    });
-                }, { threshold: 0.01 });
-
-                protectedItems.forEach(i => observer.observe(i));
-
-                // Fallback: Force load top images after 2 seconds if observer fails
-                setTimeout(() => {
-                    protectedItems.forEach(i => {
-                        if (i.getAttribute('data-loaded') !== 'true') {
-                            console.log('Fallback: Forcing load for ' + i.getAttribute('data-src-protected'));
-                            i.dataset.forceLoad = 'true';
-                            // Manually trigger observation logic
-                            observer.observe(i);
-                        }
-                    });
-                }, 2000);
-            }
-            loadProtectedAssets();
-
-            function animateCounter(el, target) {
-                const duration = 1500; const start = performance.now();
-                const step = (now) => {
-                    const progress = Math.min((now - start) / duration, 1);
-                    const eased = 1 - Math.pow(1 - progress, 3);
-                    el.textContent = Math.round(target * eased) + '+';
-                    if (progress < 1) requestAnimationFrame(step);
-                };
-                requestAnimationFrame(step);
-            }
-            const statObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => { if (entry.isIntersecting) { animateCounter(entry.target, parseInt(entry.target.getAttribute('data-target'))); statObserver.unobserve(entry.target); } });
-            }, { threshold: 0.5 });
-            document.querySelectorAll('.stat-number').forEach(el => statObserver.observe(el));
-
-            const contactForm = document.getElementById('contactForm');
-            if (contactForm) {
-                contactForm.addEventListener('submit', (e) => {
-                    e.preventDefault(); const btn = contactForm.querySelector('button[type="submit"]');
-                    btn.textContent = 'Sending...'; btn.disabled = true;
-                    fetch('https://script.google.com/macros/s/AKfycbylaVk0t-G8ONYTOTFDXBtnFGuIiE-Q494C1tGXvxVA-v-ccxsHH97DjRgKrQ4DGzlm/exec', {
-                        method: 'POST', mode: 'no-cors', body: new URLSearchParams(new FormData(contactForm))
-                    }).then(() => { alert('Success!'); contactForm.reset(); }).finally(() => { btn.textContent = 'Send Message'; btn.disabled = false; });
-                });
-            }
-        });
-    </script>
+    <script src="js/script.js"></script>
 </body>
 
 </html>
