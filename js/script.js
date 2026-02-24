@@ -89,62 +89,40 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- Lightbox for gallery images ---
-    const lightbox = document.getElementById('lightbox');
-    const lightboxContent = document.getElementById('lightboxContent');
-    const lightboxImg = document.getElementById('lightboxImg');
-    const lightboxClose = document.getElementById('lightboxClose');
-    const lightboxPrev = document.getElementById('lightboxPrev');
-    const lightboxNext = document.getElementById('lightboxNext');
-    let currentImages = []; // Now stores URLs
-    let currentIndex = 0;
+    // --- Extreme Image Protection ---
 
-    // Collect all gallery items
-    const galleryItems = document.querySelectorAll('.gallery-item');
+    // 1. Global Blocking (Right-click, Save, View Source, DevTools)
+    document.addEventListener('contextmenu', (e) => e.preventDefault());
 
-    galleryItems.forEach((item, index) => {
-        item.addEventListener('click', () => {
-            // Get URLs from all items
-            currentImages = Array.from(galleryItems).map(el => {
-                const bg = window.getComputedStyle(el).backgroundImage;
-                return bg.replace(/url\(['"]?(.*?)['"]?\)/i, '$1');
-            });
-
-            currentIndex = index;
-            openLightbox(currentImages[currentIndex]);
-        });
-    });
-
-    function openLightbox(url) {
-        lightboxContent.style.backgroundImage = `url('${url}')`;
-        lightbox.classList.add('active');
-        document.body.style.overflow = 'hidden';
-    }
-
-    function closeLightbox() {
-        lightbox.classList.remove('active');
-        document.body.style.overflow = '';
-    }
-
-    function navigateLightbox(dir) {
-        currentIndex = (currentIndex + dir + currentImages.length) % currentImages.length;
-        lightboxContent.style.backgroundImage = `url('${currentImages[currentIndex]}')`;
-    }
-
-    lightboxClose.addEventListener('click', closeLightbox);
-    lightboxPrev.addEventListener('click', () => navigateLightbox(-1));
-    lightboxNext.addEventListener('click', () => navigateLightbox(1));
-    lightbox.addEventListener('click', (e) => {
-        if (e.target === lightbox) closeLightbox();
-    });
-
-    // Keyboard navigation
     document.addEventListener('keydown', (e) => {
-        if (!lightbox.classList.contains('active')) return;
-        if (e.key === 'Escape') closeLightbox();
-        if (e.key === 'ArrowLeft') navigateLightbox(-1);
-        if (e.key === 'ArrowRight') navigateLightbox(1);
+        // Block Ctrl+S (Save), Ctrl+U (View Source), Ctrl+P (Print)
+        // Block Ctrl+Shift+I / F12 (DevTools)
+        if (
+            (e.ctrlKey && (e.key === 's' || e.key === 'u' || e.key === 'p')) ||
+            (e.ctrlKey && e.shiftKey && (e.key === 'i' || e.key === 'j' || e.key === 'c')) ||
+            (e.key === 'F12')
+        ) {
+            e.preventDefault();
+            return false;
+        }
     });
+
+    // 2. Air-Gap Image Loader (Dynamic asset injection)
+    // This removes paths from the static HTML to fool "Save Page As"
+    function loadProtectedAssets() {
+        const protectedItems = document.querySelectorAll('[data-src-protected]');
+        protectedItems.forEach(item => {
+            const obfuscatedPath = item.getAttribute('data-src-protected');
+            // Decode simple reverse obfuscation
+            const realPath = obfuscatedPath.split('').reverse().join('');
+
+            // Inject as background image for all protected containers
+            item.style.backgroundImage = `url('${realPath}')`;
+        });
+    }
+
+    // Load assets after screen is ready
+    loadProtectedAssets();
 
     // --- Counter animation for stats ---
     const statNumbers = document.querySelectorAll('.stat-number[data-target]');
@@ -154,19 +132,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 const el = entry.target;
                 const target = parseInt(el.getAttribute('data-target'));
                 animateCounter(el, target);
-                counterObserver.unobserve(el);
+                revealObserver.unobserve(el);
             }
         });
     }, { threshold: 0.5 });
 
-    statNumbers.forEach(el => counterObserver.observe(el));
+    statNumbers.forEach(el => revealObserver.observe(el));
 
     function animateCounter(el, target) {
         const duration = 1500;
         const start = performance.now();
         const step = (now) => {
             const progress = Math.min((now - start) / duration, 1);
-            const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+            const eased = 1 - Math.pow(1 - progress, 3);
             el.textContent = Math.round(target * eased) + '+';
             if (progress < 1) requestAnimationFrame(step);
         };
@@ -178,27 +156,20 @@ document.addEventListener('DOMContentLoaded', () => {
     if (contactForm) {
         contactForm.addEventListener('submit', (e) => {
             e.preventDefault();
-
             const submitBtn = contactForm.querySelector('button[type="submit"]');
             const originalBtnText = submitBtn.textContent;
-
-            // Show loading state
             submitBtn.textContent = 'Sending...';
             submitBtn.disabled = true;
 
             const formData = new FormData(contactForm);
             const data = Object.fromEntries(formData.entries());
-
-            // --- GOOGLE SHEETS INTEGRATION ---
             const scriptURL = 'https://script.google.com/macros/s/AKfycbylaVk0t-G8ONYTOTFDXBtnFGuIiE-Q494C1tGXvxVA-v-ccxsHH97DjRgKrQ4DGzlm/exec';
 
             fetch(scriptURL, {
                 method: 'POST',
                 mode: 'no-cors',
                 cache: 'no-cache',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: new URLSearchParams(data)
             })
                 .then(() => {
@@ -215,18 +186,5 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
         });
     }
-
-    // --- Image Protection ---
-    document.addEventListener('contextmenu', (e) => {
-        if (e.target.tagName === 'IMG') {
-            e.preventDefault();
-        }
-    }, false);
-
-    document.addEventListener('dragstart', (e) => {
-        if (e.target.tagName === 'IMG') {
-            e.preventDefault();
-        }
-    }, false);
 
 });
