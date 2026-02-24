@@ -89,85 +89,58 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- Extreme Image Protection ---
+    // --- Lightbox for gallery images ---
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+    const lightboxClose = document.getElementById('lightboxClose');
+    const lightboxPrev = document.getElementById('lightboxPrev');
+    const lightboxNext = document.getElementById('lightboxNext');
+    let currentImages = [];
+    let currentIndex = 0;
 
-    // 1. Global Blocking (Right-click, Save, View Source, DevTools)
-    document.addEventListener('contextmenu', (e) => e.preventDefault());
+    // Collect all gallery images
+    const allGalleryItems = document.querySelectorAll('.gallery-item img');
+    const galleryImgs = Array.from(allGalleryItems);
 
-    document.addEventListener('keydown', (e) => {
-        // Block Ctrl+S (Save), Ctrl+U (View Source), Ctrl+P (Print)
-        // Block Ctrl+Shift+I / F12 (DevTools)
-        if (
-            (e.ctrlKey && (e.key === 's' || e.key === 'u' || e.key === 'p')) ||
-            (e.ctrlKey && e.shiftKey && (e.key === 'i' || e.key === 'j' || e.key === 'c')) ||
-            (e.key === 'F12')
-        ) {
-            e.preventDefault();
-            return false;
-        }
+    allGalleryItems.forEach((img, index) => {
+        img.style.cursor = 'zoom-in';
+        img.addEventListener('click', () => {
+            currentImages = galleryImgs;
+            currentIndex = index;
+            openLightbox(img.src);
+        });
     });
 
-    // 2. Canvas-Based Air-Gap Image Loader (Ghost Rendering)
-    // Draws pixels directly to canvas, hiding links from browser scanners
-    function loadProtectedAssets() {
-        const protectedItems = document.querySelectorAll('[data-src-protected]');
-
-        protectedItems.forEach(item => {
-            const obfuscatedPath = item.getAttribute('data-src-protected');
-            const realPath = obfuscatedPath.split('').reverse().join('');
-
-            // Create a ghost image object
-            const img = new Image();
-            img.src = realPath;
-
-            img.onload = () => {
-                // Create canvas
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-
-                // Add canvas to container
-                item.innerHTML = ''; // Clear fallback pixels
-                item.appendChild(canvas);
-
-                // Function to draw image with "cover" logic
-                const drawCanvas = () => {
-                    const w = item.offsetWidth;
-                    const h = item.offsetHeight;
-                    if (w === 0 || h === 0) return; // Prevent 0 size errors
-
-                    canvas.width = w;
-                    canvas.height = h;
-
-                    const imgRatio = img.width / img.height;
-                    const containerRatio = w / h;
-
-                    let drawWidth, drawHeight, offsetX, offsetY;
-
-                    if (containerRatio > imgRatio) {
-                        drawWidth = w;
-                        drawHeight = w / imgRatio;
-                        offsetX = 0;
-                        offsetY = (h - drawHeight) / 2;
-                    } else {
-                        drawWidth = h * imgRatio;
-                        drawHeight = h;
-                        offsetX = (w - drawWidth) / 2;
-                        offsetY = 0;
-                    }
-
-                    ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
-                };
-
-                drawCanvas();
-
-                // Handle resize
-                window.addEventListener('resize', drawCanvas);
-            };
-        });
+    function openLightbox(src) {
+        lightboxImg.src = src;
+        lightbox.classList.add('active');
+        document.body.style.overflow = 'hidden';
     }
 
-    // Load assets after screen is ready
-    loadProtectedAssets();
+    function closeLightbox() {
+        lightbox.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    function navigateLightbox(dir) {
+        currentIndex = (currentIndex + dir + currentImages.length) % currentImages.length;
+        lightboxImg.src = currentImages[currentIndex].src;
+    }
+
+    lightboxClose.addEventListener('click', closeLightbox);
+    lightboxPrev.addEventListener('click', () => navigateLightbox(-1));
+    lightboxNext.addEventListener('click', () => navigateLightbox(1));
+    lightbox.addEventListener('click', (e) => {
+        if (e.target === lightbox) closeLightbox();
+    });
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        if (!lightbox.classList.contains('active')) return;
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowLeft') navigateLightbox(-1);
+        if (e.key === 'ArrowRight') navigateLightbox(1);
+    });
 
     // --- Counter animation for stats ---
     const statNumbers = document.querySelectorAll('.stat-number[data-target]');
@@ -177,19 +150,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 const el = entry.target;
                 const target = parseInt(el.getAttribute('data-target'));
                 animateCounter(el, target);
-                revealObserver.unobserve(el);
+                counterObserver.unobserve(el);
             }
         });
     }, { threshold: 0.5 });
 
-    statNumbers.forEach(el => revealObserver.observe(el));
+    statNumbers.forEach(el => counterObserver.observe(el));
 
     function animateCounter(el, target) {
         const duration = 1500;
         const start = performance.now();
         const step = (now) => {
             const progress = Math.min((now - start) / duration, 1);
-            const eased = 1 - Math.pow(1 - progress, 3);
+            const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
             el.textContent = Math.round(target * eased) + '+';
             if (progress < 1) requestAnimationFrame(step);
         };
@@ -198,38 +171,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Contact form handler ---
     const contactForm = document.getElementById('contactForm');
-    if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const submitBtn = contactForm.querySelector('button[type="submit"]');
-            const originalBtnText = submitBtn.textContent;
-            submitBtn.textContent = 'Sending...';
-            submitBtn.disabled = true;
+    contactForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const service = document.getElementById('service').value;
+        const message = document.getElementById('message').value;
 
-            const formData = new FormData(contactForm);
-            const data = Object.fromEntries(formData.entries());
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbylaVk0t-G8ONYTOTFDXBtnFGuIiE-Q494C1tGXvxVA-v-ccxsHH97DjRgKrQ4DGzlm/exec';
-
-            fetch(scriptURL, {
-                method: 'POST',
-                mode: 'no-cors',
-                cache: 'no-cache',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: new URLSearchParams(data)
-            })
-                .then(() => {
-                    alert('Thank you! Your message has been sent successfully. We will update the details on the excel sheet.');
-                    contactForm.reset();
-                })
-                .catch(error => {
-                    console.error('Error!', error.message);
-                    alert('There was an error sending your message. Please try again.');
-                })
-                .finally(() => {
-                    submitBtn.textContent = originalBtnText;
-                    submitBtn.disabled = false;
-                });
-        });
-    }
+        const subject = encodeURIComponent(`Project Inquiry from ${name} — ${service || 'General'}`);
+        const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\nService: ${service}\n\nMessage:\n${message}`);
+        window.location.href = `mailto:contact@astronfilms.com?subject=${subject}&body=${body}`;
+    });
 
 });
