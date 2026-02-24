@@ -13,7 +13,473 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* ============================================
+   ASTRON FILMS — Design System
+   Colors: Black + #e6fc4f accent
+   Fonts: Outfit (headings) + Inter (body)
+   ============================================ */
+
+        /* --- CSS Variables --- */
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #111111;
+            --bg-card: #161616;
+            --bg-card-hover: #1c1c1c;
+            --text-primary: #ffffff;
+            --text-secondary: #999999;
+            --text-muted: #555555;
+            --accent: #e6fc4f;
+            --accent-dark: #c8dc30;
+            --accent-glow: rgba(230, 252, 79, 0.15);
+            --glass-bg: rgba(255, 255, 255, 0.04);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+            --radius-xl: 28px;
+            --transition: 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            --transition-fast: 0.25s ease;
+        }
+
+        /* --- Reset & Base --- */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            user-select: none;
+            -webkit-user-drag: none;
+            pointer-events: none;
+        }
+
+        .gallery-item img,
+        .logo-img,
+        .service-img img {
+            pointer-events: auto;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        button {
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .section {
+            padding: 120px 0;
+        }
+
+        .accent-text {
+            color: var(--accent);
+        }
+
+        /* --- Typography --- */
+        h1,
+        h2,
+        h3,
+        h4 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            line-height: 1.1;
+        }
+
+        /* --- Preloader --- */
+        #preloader {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: var(--bg-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
+        }
+
+        #preloader.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .loader {
+            text-align: center;
+        }
+
+        .loader-text {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: 12px;
+            color: var(--text-primary);
+        }
+
+        .loader-bar {
+            width: 120px;
+            height: 3px;
+            margin: 20px auto 0;
+            background: var(--glass-border);
+            border-radius: 2px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .loader-bar::after {
+            content: '';
+            position: absolute;
+            left: -40px;
+            top: 0;
+            width: 40px;
+            height: 100%;
+            background: var(--accent);
+            animation: loaderSlide 0.8s ease-in-out infinite;
+        }
+
+        @keyframes loaderSlide {
+            to {
+                left: 120px;
+            }
+        }
+
+        /* --- Navigation --- */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 20px 0;
+            transition: var(--transition);
+        }
+
+        .navbar.scrolled {
+            background: rgba(10, 10, 10, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 12px 0;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .nav-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-img {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo-text {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 800;
+            letter-spacing: 3px;
+        }
+
+        .logo-text .accent {
+            color: var(--accent);
+            font-weight: 400;
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .nav-link {
+            font-size: 0.9rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            transition: var(--transition-fast);
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: var(--text-primary);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: var(--transition-fast);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .nav-cta {
+            background: var(--accent);
+            color: #0a0a0a !important;
+            padding: 10px 24px;
+            border-radius: 100px;
+            font-weight: 600;
+        }
+
+        .nav-cta:hover {
+            background: var(--accent-dark);
+            transform: scale(1.05);
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .hamburger span {
+            width: 24px;
+            height: 2px;
+            background: var(--text-primary);
+        }
+
+        /* --- Hero --- */
+        .hero {
+            position: relative;
+            height: 100vh;
+            min-height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .hero-video {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(10, 10, 10, 0.5) 0%, rgba(10, 10, 10, 0.95) 100%);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 850px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 4px;
+            color: var(--accent);
+            border: 1px solid var(--accent);
+            padding: 8px 20px;
+            border-radius: 100px;
+            margin-bottom: 28px;
+        }
+
+        .hero-title {
+            font-size: clamp(2.8rem, 7vw, 5.5rem);
+            font-weight: 900;
+            margin-bottom: 24px;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            color: var(--text-secondary);
+            margin: 0 auto 40px;
+        }
+
+        /* --- Services --- */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        .service-card {
+            border-radius: var(--radius-lg);
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            transition: var(--transition);
+        }
+
+        .service-img {
+            height: 240px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-img::after {
+            content: '© ASTRON FILMS';
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.4);
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        /* --- Gallery --- */
+        .gallery-grid {
+            display: grid;
+            gap: 12px;
+            grid-template-columns: repeat(3, 1fr);
+            grid-auto-rows: 280px;
+        }
+
+        .gallery-item {
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            position: relative;
+            background-color: var(--bg-card);
+            transition: var(--transition);
+        }
+
+        .gallery-item canvas,
+        .service-img canvas,
+        .logo-img canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            display: block;
+            animation: ghostFade 0.6s ease-out forwards;
+        }
+
+        @keyframes ghostFade {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .gallery-item::before {
+            content: '© ASTRON FILMS';
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.3);
+            z-index: 4;
+            pointer-events: none;
+        }
+
+        /* --- Forms --- */
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            background: var(--bg-secondary);
+            border: 1px solid var(--glass-border);
+            padding: 16px;
+            color: white;
+            border-radius: 8px;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: var(--accent);
+            outline: none;
+        }
+
+        /* --- Animations --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- Responsive --- */
+        @media (max-width: 768px) {
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .nav-menu {
+                display: none;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -30,7 +496,10 @@
     <nav id="navbar" class="navbar">
         <div class="nav-container">
             <a href="#hero" class="nav-logo">
-                <img src="assets/images/1767261700115.jpeg" alt="Astron Films" class="logo-img">
+                <div class="logo-img" data-src-protected="gepj.5110071627671/segami/stessa">
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="
+                        alt="Astron Films">
+                </div>
                 <span class="logo-text">ASTRON<span class="accent">FILMS</span></span>
             </a>
             <div class="nav-menu" id="navMenu">
@@ -441,7 +910,139 @@
         </div>
     </footer>
 
-    <script src="js/script.js?v=2.0"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const preloader = document.getElementById('preloader');
+            window.addEventListener('load', () => {
+                setTimeout(() => preloader.classList.add('hidden'), 800);
+            });
+
+            const navbar = document.getElementById('navbar');
+            window.addEventListener('scroll', () => {
+                navbar.classList.toggle('scrolled', window.scrollY > 60);
+            }, { passive: true });
+
+            const hamburger = document.getElementById('hamburger');
+            const navMenu = document.getElementById('navMenu');
+            hamburger.addEventListener('click', () => {
+                hamburger.classList.toggle('active');
+                navMenu.classList.toggle('active');
+            });
+
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const target = document.querySelector(anchor.getAttribute('href'));
+                    if (target) {
+                        const top = target.getBoundingClientRect().top + window.scrollY - 80;
+                        window.scrollTo({ top, behavior: 'smooth' });
+                    }
+                });
+            });
+
+            const revealObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+            document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+            // --- Extreme Protection ---
+            document.addEventListener('contextmenu', (e) => e.preventDefault());
+            document.addEventListener('keydown', (e) => {
+                if ((e.ctrlKey && (e.key === 's' || e.key === 'u' || e.key === 'p')) ||
+                    (e.ctrlKey && e.shiftKey && (e.key === 'i' || e.key === 'j' || e.key === 'c')) ||
+                    (e.key === 'F12')) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+
+            function loadProtectedAssets() {
+                const protectedItems = document.querySelectorAll('[data-src-protected]');
+                protectedItems.forEach(item => {
+                    const obfuscatedPath = item.getAttribute('data-src-protected');
+                    const realPath = obfuscatedPath.split('').reverse().join('');
+                    const img = new Image();
+                    img.src = realPath;
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        item.innerHTML = '';
+                        item.appendChild(canvas);
+                        const drawCanvas = () => {
+                            const w = item.offsetWidth;
+                            const h = item.offsetHeight;
+                            if (w === 0 || h === 0) return;
+                            canvas.width = w;
+                            canvas.height = h;
+                            const imgRatio = img.width / img.height;
+                            const containerRatio = w / h;
+                            let drawWidth, drawHeight, offsetX, offsetY;
+                            if (containerRatio > imgRatio) {
+                                drawWidth = w; drawHeight = w / imgRatio;
+                                offsetX = 0; offsetY = (h - drawHeight) / 2;
+                            } else {
+                                drawWidth = h * imgRatio; drawHeight = h;
+                                offsetX = (w - drawWidth) / 2; offsetY = 0;
+                            }
+                            ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
+                        };
+                        drawCanvas();
+                        window.addEventListener('resize', drawCanvas);
+                    };
+                });
+            }
+            loadProtectedAssets();
+
+            // Stats counter
+            function animateCounter(el, target) {
+                const duration = 1500;
+                const start = performance.now();
+                const step = (now) => {
+                    const progress = Math.min((now - start) / duration, 1);
+                    const eased = 1 - Math.pow(1 - progress, 3);
+                    el.textContent = Math.round(target * eased) + '+';
+                    if (progress < 1) requestAnimationFrame(step);
+                };
+                requestAnimationFrame(step);
+            }
+            const statObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        animateCounter(entry.target, parseInt(entry.target.getAttribute('data-target')));
+                        statObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.5 });
+            document.querySelectorAll('.stat-number').forEach(el => statObserver.observe(el));
+
+            // Form
+            const contactForm = document.getElementById('contactForm');
+            if (contactForm) {
+                contactForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const submitBtn = contactForm.querySelector('button[type="submit"]');
+                    submitBtn.textContent = 'Sending...';
+                    submitBtn.disabled = true;
+                    fetch('https://script.google.com/macros/s/AKfycbylaVk0t-G8ONYTOTFDXBtnFGuIiE-Q494C1tGXvxVA-v-ccxsHH97DjRgKrQ4DGzlm/exec', {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        body: new URLSearchParams(new FormData(contactForm))
+                    }).then(() => {
+                        alert('Sent successfully!');
+                        contactForm.reset();
+                    }).finally(() => {
+                        submitBtn.textContent = 'Send Message';
+                        submitBtn.disabled = false;
+                    });
+                });
+            }
+        });
+    </script>
 </body>
 
 </html>
