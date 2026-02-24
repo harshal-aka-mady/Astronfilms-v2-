@@ -186,26 +186,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = Object.fromEntries(formData.entries());
 
             // --- GOOGLE SHEETS INTEGRATION ---
-            // 1. Set up your Google Apps Script (as instructed in implementation_plan.md)
-            // 2. Paste your Web App URL below:
-            const scriptURL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
-
-            if (scriptURL === 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
-                // Fallback if URL is not set
-                const name = data.name;
-                const email = data.email;
-                const phone = data.phone;
-                const service = data.service;
-                const message = data.message;
-
-                const subject = encodeURIComponent(`Project Inquiry from ${name} — ${service || 'General'}`);
-                const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\nPhone: ${phone}\nService: ${service}\n\nMessage:\n${message}`);
-                window.location.href = `mailto:business@astronfilms.com?subject=${subject}&body=${body}`;
-
-                submitBtn.textContent = originalBtnText;
-                submitBtn.disabled = false;
-                return;
-            }
+            const scriptURL = 'https://script.google.com/a/macros/voltairtech.com/s/AKfycbzBF93vjsyeTNhSGBAR-sEqDWnFdGTxybhuAh4Ir5lac7AD2gXsKGQwwldUUQB28sh9/exec';
 
             fetch(scriptURL, {
                 method: 'POST',
@@ -217,7 +198,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: new URLSearchParams(data)
             })
                 .then(() => {
-                    alert('Thank you! Your message has been sent successfully.');
+                    alert('Thank you! Your message has been sent successfully. We will update the details on the excel sheet.');
                     contactForm.reset();
                 })
                 .catch(error => {
