@@ -4,6 +4,32 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
+    // --- Advanced Security Measures ---
+    // Disable right-click globally
+    document.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+        return false;
+    });
+
+    // Disable keyboard shortcuts for saving/viewing source
+    document.addEventListener('keydown', (e) => {
+        // Disable Ctrl+S, Ctrl+U, Ctrl+Shift+I, F12
+        if (
+            (e.ctrlKey && (e.key === 's' || e.key === 'u' || e.key === 'S' || e.key === 'U')) ||
+            (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'C' || e.key === 'c')) ||
+            (e.key === 'F12')
+        ) {
+            e.preventDefault();
+            return false;
+        }
+    });
+
+    // Disable dragstart globally
+    document.addEventListener('dragstart', (e) => {
+        e.preventDefault();
+        return false;
+    });
+
     // --- Preloader ---
     const preloader = document.getElementById('preloader');
     window.addEventListener('load', () => {
@@ -171,16 +197,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Contact form handler ---
     const contactForm = document.getElementById('contactForm');
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbylaVk0t-G8ONYTOTFDXBtnFGuIiE-Q494C1tGXvxVA-v-ccxsHH97DjRgKrQ4DGzlm/exec';
+
     contactForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        const name = document.getElementById('name').value;
-        const email = document.getElementById('email').value;
-        const service = document.getElementById('service').value;
-        const message = document.getElementById('message').value;
+        const submitBtn = contactForm.querySelector('button[type="submit"]');
+        const originalBtnText = submitBtn.textContent;
 
-        const subject = encodeURIComponent(`Project Inquiry from ${name} — ${service || 'General'}`);
-        const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\nService: ${service}\n\nMessage:\n${message}`);
-        window.location.href = `mailto:contact@astronfilms.com?subject=${subject}&body=${body}`;
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Sending...';
+
+        const formData = new FormData(contactForm);
+
+        fetch(scriptURL, {
+            method: 'POST',
+            body: formData,
+            mode: 'no-cors' // Google Apps Script usually needs this or returns CORS error even if it succeeds
+        })
+            .then(() => {
+                alert('Thank you! Your message has been sent successfully.');
+                contactForm.reset();
+            })
+            .catch(error => {
+                console.error('Error!', error.message);
+                alert('There was an error sending your message. Please try again.');
+            })
+            .finally(() => {
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalBtnText;
+            });
     });
 
 });
