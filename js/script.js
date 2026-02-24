@@ -186,7 +186,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = Object.fromEntries(formData.entries());
 
             // --- GOOGLE SHEETS INTEGRATION ---
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbzBF93vjsyeTNhSGBAR-sEqDWnFdGTxybhuAh4Ir5lac7AD2gXsKGQwwldUUQB28sh9/exec';
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbylaVk0t-G8ONYTOTFDXBtnFGuIiE-Q494C1tGXvxVA-v-ccxsHH97DjRgKrQ4DGzlm/exec';
 
             fetch(scriptURL, {
                 method: 'POST',
