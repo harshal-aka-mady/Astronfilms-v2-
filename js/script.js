@@ -212,4 +212,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- Image Protection ---
+    document.addEventListener('contextmenu', (e) => {
+        if (e.target.tagName === 'IMG') {
+            e.preventDefault();
+        }
+    }, false);
+
+    document.addEventListener('dragstart', (e) => {
+        if (e.target.tagName === 'IMG') {
+            e.preventDefault();
+        }
+    }, false);
+
 });

@@ -54,6 +54,18 @@ img {
     max-width: 100%;
     height: auto;
     display: block;
+    user-select: none;
+    -webkit-user-drag: none;
+    pointer-events: none;
+    /* Prevents long-press save on mobile */
+}
+
+/* Allow pointer events for gallery items and lightbox so they stay interactive */
+.gallery-item img,
+.lightbox-img,
+.logo-img,
+.service-img img {
+    pointer-events: auto;
 }
 
 a {
