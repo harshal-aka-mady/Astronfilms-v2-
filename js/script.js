@@ -91,28 +91,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Lightbox for gallery images ---
     const lightbox = document.getElementById('lightbox');
+    const lightboxContent = document.getElementById('lightboxContent');
     const lightboxImg = document.getElementById('lightboxImg');
     const lightboxClose = document.getElementById('lightboxClose');
     const lightboxPrev = document.getElementById('lightboxPrev');
     const lightboxNext = document.getElementById('lightboxNext');
-    let currentImages = [];
+    let currentImages = []; // Now stores URLs
     let currentIndex = 0;
 
-    // Collect all gallery images
-    const allGalleryItems = document.querySelectorAll('.gallery-item img');
-    const galleryImgs = Array.from(allGalleryItems);
+    // Collect all gallery items
+    const galleryItems = document.querySelectorAll('.gallery-item');
 
-    allGalleryItems.forEach((img, index) => {
-        img.style.cursor = 'zoom-in';
-        img.addEventListener('click', () => {
-            currentImages = galleryImgs;
+    galleryItems.forEach((item, index) => {
+        item.addEventListener('click', () => {
+            // Get URLs from all items
+            currentImages = Array.from(galleryItems).map(el => {
+                const bg = window.getComputedStyle(el).backgroundImage;
+                return bg.replace(/url\(['"]?(.*?)['"]?\)/i, '$1');
+            });
+
             currentIndex = index;
-            openLightbox(img.src);
+            openLightbox(currentImages[currentIndex]);
         });
     });
 
-    function openLightbox(src) {
-        lightboxImg.src = src;
+    function openLightbox(url) {
+        lightboxContent.style.backgroundImage = `url('${url}')`;
         lightbox.classList.add('active');
         document.body.style.overflow = 'hidden';
     }
@@ -124,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function navigateLightbox(dir) {
         currentIndex = (currentIndex + dir + currentImages.length) % currentImages.length;
-        lightboxImg.src = currentImages[currentIndex].src;
+        lightboxContent.style.backgroundImage = `url('${currentImages[currentIndex]}')`;
     }
 
     lightboxClose.addEventListener('click', closeLightbox);
