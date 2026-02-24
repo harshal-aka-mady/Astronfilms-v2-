@@ -363,18 +363,6 @@
             overflow: hidden;
         }
 
-        .service-img::after {
-            content: '© ASTRON FILMS';
-            position: absolute;
-            bottom: 12px;
-            right: 12px;
-            font-size: 0.7rem;
-            font-weight: 700;
-            color: rgba(255, 255, 255, 0.4);
-            z-index: 5;
-            pointer-events: none;
-        }
-
         /* --- Gallery --- */
         .gallery-grid {
             display: grid;
@@ -412,18 +400,6 @@
             to {
                 opacity: 1;
             }
-        }
-
-        .gallery-item::before {
-            content: '© ASTRON FILMS';
-            position: absolute;
-            bottom: 12px;
-            right: 12px;
-            font-size: 0.7rem;
-            font-weight: 700;
-            color: rgba(255, 255, 255, 0.3);
-            z-index: 4;
-            pointer-events: none;
         }
 
         /* --- Forms --- */
@@ -963,38 +939,48 @@
 
             function loadProtectedAssets() {
                 const protectedItems = document.querySelectorAll('[data-src-protected]');
-                protectedItems.forEach(item => {
-                    const obfuscatedPath = item.getAttribute('data-src-protected');
-                    const realPath = obfuscatedPath.split('').reverse().join('');
-                    const img = new Image();
-                    img.src = realPath;
-                    img.onload = () => {
-                        const canvas = document.createElement('canvas');
-                        const ctx = canvas.getContext('2d');
-                        item.innerHTML = '';
-                        item.appendChild(canvas);
-                        const drawCanvas = () => {
-                            const w = item.offsetWidth;
-                            const h = item.offsetHeight;
-                            if (w === 0 || h === 0) return;
-                            canvas.width = w;
-                            canvas.height = h;
-                            const imgRatio = img.width / img.height;
-                            const containerRatio = w / h;
-                            let drawWidth, drawHeight, offsetX, offsetY;
-                            if (containerRatio > imgRatio) {
-                                drawWidth = w; drawHeight = w / imgRatio;
-                                offsetX = 0; offsetY = (h - drawHeight) / 2;
-                            } else {
-                                drawWidth = h * imgRatio; drawHeight = h;
-                                offsetX = (w - drawWidth) / 2; offsetY = 0;
-                            }
-                            ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
-                        };
-                        drawCanvas();
-                        window.addEventListener('resize', drawCanvas);
-                    };
-                });
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const item = entry.target;
+                            const obfuscatedPath = item.getAttribute('data-src-protected');
+                            const realPath = obfuscatedPath.split('').reverse().join('');
+                            const img = new Image();
+                            img.src = realPath;
+                            img.onload = () => {
+                                const canvas = document.createElement('canvas');
+                                const ctx = canvas.getContext('2d');
+                                item.innerHTML = '';
+                                item.appendChild(canvas);
+                                const drawCanvas = () => {
+                                    const w = item.offsetWidth;
+                                    const h = item.offsetHeight;
+                                    if (w === 0 || h === 0) {
+                                        setTimeout(drawCanvas, 100);
+                                        return;
+                                    }
+                                    canvas.width = w;
+                                    canvas.height = h;
+                                    const imgRatio = img.width / img.height;
+                                    const containerRatio = w / h;
+                                    let drawWidth, drawHeight, offsetX, offsetY;
+                                    if (containerRatio > imgRatio) {
+                                        drawWidth = w; drawHeight = w / imgRatio;
+                                        offsetX = 0; offsetY = (h - drawHeight) / 2;
+                                    } else {
+                                        drawWidth = h * imgRatio; drawHeight = h;
+                                        offsetX = (w - drawWidth) / 2; offsetY = 0;
+                                    }
+                                    ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
+                                };
+                                drawCanvas();
+                                window.addEventListener('resize', drawCanvas);
+                                observer.unobserve(item);
+                            };
+                        }
+                    });
+                }, { threshold: 0.01 });
+                protectedItems.forEach(item => observer.observe(item));
             }
             loadProtectedAssets();
 
